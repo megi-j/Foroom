@@ -3,6 +3,8 @@ package com.example.foroom.pages
 import android.view.View
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
@@ -43,7 +45,10 @@ class ChatsPage : BasePage() {
         waitForDisplayed(chatCardTitle(name), LONG_TIMEOUT_MS)
     }
 
-    fun tapOpenChat(name: String) = tap(openButtonOf(name), LONG_TIMEOUT_MS)
+    fun tapOpenChat(name: String) {
+        waitForDisplayed(allOf(openButtonOf(name), isDisplayingAtLeast(90)), SETTLE_TIMEOUT_MS)
+            .perform(click())
+    }
 
     fun clickOpenChatDirectly(name: String) {
         waitForDisplayed(openButtonOf(name), LONG_TIMEOUT_MS).perform(object : ViewAction {
@@ -54,5 +59,8 @@ class ChatsPage : BasePage() {
                 uiController.loopMainThreadUntilIdle()
             }
         })
+    }
+    private companion object {
+        const val SETTLE_TIMEOUT_MS = 3_000L
     }
 }
